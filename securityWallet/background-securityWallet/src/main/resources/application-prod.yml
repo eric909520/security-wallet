@@ -1,0 +1,126 @@
+server:
+  port: 4040
+  servlet:
+    context-path: /
+    session:
+      timeout: 120m
+
+spring:
+  datasource:
+    master:
+      url: jdbc:mysql://:3306/?useSSL=true&useUnicode=yes&characterEncoding=UTF8&allowMultiQueries=true&serverTimezone=CTT&nullCatalogMeansCurrent=true&autoReconnect=true&useAffectedRows=true
+      username: root
+      password:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      type: com.zaxxer.hikari.HikariDataSource
+      pool-name: secwallet
+      maximum-pool-size: 15
+      auto-commit: true
+      ##If idleTimeout+1s>maxLifetime and maxLifetime>0, it will be reset to 0;
+      ##If idleTimeout!=0 and less than 10 seconds, it will be reset to 10 seconds.
+      ##If idleTimeout=0 it means that idle connections will never be removed from the connection pool.
+      idle-timeout: 300000 #milliseconds 5 minutes
+      max-lifetime: 18000
+      connection-timeout: 30000
+      minimum-idle: 20
+#    cluster:
+#    - key: merchant
+#      url: jdbc:mysql://:3306/?useSSL=true&useUnicode=yes&characterEncoding=UTF8&allowMultiQueries=true&serverTimezone=CTT&nullCatalogMeansCurrent=true&autoReconnect=true
+#      username: root
+#      password:
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+#      type: com.zaxxer.hikari.HikariDataSource
+#      pool-name: secwallet
+#      maximum-pool-size: 15
+#      auto-commit: true
+#      ##If idleTimeout+1s>maxLifetime and maxLifetime>0, it will be reset to 0;
+#      ##If idleTimeout!=0 and less than 10 seconds, it will be reset to 10 seconds.
+#      ##If idleTimeout=0 it means that idle connections will never be removed from the connection pool.
+#      idle-timeout: 300000 #milliseconds 5 minutes
+#      max-lifetime: 18000
+#      connection-timeout: 30000
+#      minimum-idle: 20
+#
+#    - key: slave
+#      url: jdbc:mysql://:3306/?useSSL=true&useUnicode=yes&characterEncoding=UTF8&allowMultiQueries=true&serverTimezone=CTT&nullCatalogMeansCurrent=true&autoReconnect=true
+#      username: root
+#      password:
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+#      type: com.zaxxer.hikari.HikariDataSource
+#      pool-name: secwallet
+#      maximum-pool-size: 15
+#      auto-commit: true
+#      ##If idleTimeout+1s>maxLifetime and maxLifetime>0, it will be reset to 0;
+#      ##If idleTimeout!=0 and less than 10 seconds, it will be reset to 10 seconds.
+#      ##If idleTimeout=0 it means that idle connections will never be removed from the connection pool.
+#      idle-timeout: 300000 #milliseconds 5 minutes
+#      max-lifetime: 18000
+#      connection-timeout: 30000
+#      minimum-idle: 20
+#  servlet:
+#    multipart:
+#      enabled: true
+#      max-request-size: 20MB
+#      location: ${cthl.file.filepath}
+#      max-file-size: 20MB
+  session:
+    store-type: redis
+    timeout: 18000
+    redis:
+      flush-mode: on_save
+      namespace: redis-session
+
+  redis:
+    host:
+    password:
+    port: 6379
+    database: 0
+    timeout: 18000
+    lettuce:
+      pool:
+        max-idle: 10 #Maximum idle number
+        max-active: 100 #Maximum number of connections
+        max-wait: -1 #Maximum waiting time (negative value means no limit)
+        min-idle: 0 #Connection pool minimum connection
+  http:
+    encoding:
+      charset: utf-8
+      enabled: true
+oss:
+  endpoint:
+  accessKeyId:
+  accessKeySecret:
+  bucketName:
+
+chat:
+#     Callback receipt usage
+    hxSecret:
+#     Receive callback for signature verification
+    secret:
+
+cthl:
+  batch:
+    count: 20
+  upload:
+    http:
+      filepath: /home/ftpuser/www/
+      outPutFolderPath:
+    ftp:
+      encoding: UTF-8
+      enabled: true
+      host:
+      port: 30303
+      username:
+      password:
+      filepath: /home/ftpuser/www/
+      buffer-size: 5096
+      maxTotal: 100
+      maxIdle: 50
+      minIdle: 0
+    filebrowse:
+    upLoadType: ftpUploadStrategy
+rabbitmq:
+  host:
+  port: 5672
+  username:
+  password:

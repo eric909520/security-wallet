@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.secwallet.schedule.dao.ScheduleJobMapper">
+    <resultMap id="BaseResultMap" type="org.secwallet.schedule.model.ScheduleJob">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="task_description" jdbcType="VARCHAR" property="taskDescription"/>
+        <result column="task_name" jdbcType="VARCHAR" property="taskName"/>
+        <result column="task_group" jdbcType="VARCHAR" property="taskGroup"/>
+        <result column="trigger_name" jdbcType="VARCHAR" property="triggerName"/>
+        <result column="trigger_group" jdbcType="VARCHAR" property="triggerGroup"/>
+        <result column="trigger_cron_expression" jdbcType="VARCHAR" property="triggerCronExpression"/>
+        <result column="execute_class_name" jdbcType="VARCHAR" property="executeClassName"/>
+        <result column="execute_method_name" jdbcType="VARCHAR" property="executeMethodName"/>
+        <result column="target_table" jdbcType="VARCHAR" property="targetTable"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="CREATE_USER_ID" jdbcType="VARCHAR" property="createUserId" />
+        <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="UPDATE_USER_ID" jdbcType="VARCHAR" property="updateUserId" />
+        <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
+        <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    </resultMap>
+    <select id="findAll"  resultMap="BaseResultMap">
+        SELECT *
+        FROM sys_schedule_info
+        order by CREATE_TIME desc
+    </select>
+    <insert id="insert" parameterType="org.secwallet.schedule.model.ScheduleJob">
+        INSERT sys_schedule_info
+        SET
+        id=#{id},
+        task_description=#{taskDescription},
+        task_name=#{taskName},
+        task_group=#{taskGroup},
+        trigger_name=#{triggerName},
+        trigger_group=#{triggerGroup},
+        trigger_cron_expression=#{triggerCronExpression},
+        execute_class_name=#{executeClassName},
+        execute_method_name=#{executeMethodName},
+        target_table=#{targetTable},
+        status=#{status},
+        CREATE_USER_ID=#{createUserId},
+        CREATE_USER=#{createUser},
+        CREATE_TIME=#{createTime}
+    </insert>
+    <update id="updateStatus">
+        update
+        sys_schedule_info
+        set
+        status=#{status}
+        <if test="id!=null and id!=''">
+            where id=id=#{id}
+        </if>
+    </update>
+</mapper>

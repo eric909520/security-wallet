@@ -1,0 +1,20 @@
+spring:
+  profiles:
+    include: dev
+
+mybatis:
+  config-location: classpath:/mybatis-config.xml
+  mapper-locations: classpath*:/mybatis/*Mapper.xml
+logging:
+  level.com.cthl.bpm: info
+
+management:
+  endpoint:
+    health:
+      enabled: true
+    env:
+      enabled: true
+
+beetl:
+  templatesPath: templates
+

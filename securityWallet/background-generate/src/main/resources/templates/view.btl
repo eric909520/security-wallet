@@ -1,0 +1,159 @@
+<template>
+  <div class="container" style="width:99%;margin-top:-25px;">
+	<!--tool-->
+	<div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
+		<el-form :inline="true" :model="filters" :size="size">
+			<el-form-item>
+				<el-input v-model="filters.label" placeholder="name"></el-input>
+			</el-form-item>
+			<el-form-item>
+				<kt-button :label="$t('action.search')" perms="sys:${table.objectName}:view" type="primary" @click="findPage(null)"/>
+			</el-form-item>
+			<el-form-item>
+				<kt-button :label="$t('action.add')" perms="sys:${table.objectName}:add" type="primary" @click="handleAdd" />
+			</el-form-item>
+		</el-form>
+	</div>
+	<!--table content column -->
+	<kt-table permsEdit="sys:${table.objectName}:edit" permsDelete="sys:${table.objectName}:delete"
+		:data="pageResult" :columns="columns" 
+		@findPage="findPage" @handleEdit="handleEdit" @handleDelete="handleDelete">
+	</kt-table>
+	<!--Added editing interface-->
+	<el-dialog :title="operation?'add':'edit'" width="40%" :visible.sync="editDialogVisible" :close-on-click-modal="false">
+		<el-form :model="dataForm" label-width="80px" :rules="dataFormRules" ref="dataForm" :size="size">
+<%
+	for(column in table.columns) {
+%>	
+			<el-form-item label="${column.description}" prop="${column.fieldName}"  v-if="dataForm.isPrimaryKey">
+				<el-input v-model="dataForm.${column.fieldName}" auto-complete="off"></el-input>
+			</el-form-item>
+<%
+	}
+%>
+		</el-form>
+		<div slot="footer" class="dialog-footer">
+			<el-button :size="size" @click.native="editDialogVisible = false">{{$t('action.cancel')}}</el-button>
+			<el-button :size="size" type="primary" @click.native="submitForm" :loading="editLoading">{{$t('action.submit')}}</el-button>
+		</div>
+	</el-dialog>
+  </div>
+</template>
+
+<script>
+import KtTable from "@/views/Core/KtTable"
+import KtButton from "@/views/Core/KtButton"
+import { format } from "@/utils/datetime"
+export default {
+	components:{
+			KtTable,
+			KtButton
+	},
+	data() {
+		return {
+			size: 'small',
+			filters: {
+				label: ''
+			},
+			columns: [
+<%
+	for(column in table.columns) {
+%>	
+				{prop:"${column.fieldName}", label:"${column.description}", minWidth:100},
+<%
+	}
+%>
+			],
+			pageRequest: { pageNum: 1, pageSize: 8 },
+			pageResult: {},
+
+			operation: false, // true:add, false:edit
+			editDialogVisible: false, // Whether to display the new editing interface
+			editLoading: false,
+			dataFormRules: {
+				label: [
+					{ required: true, message: 'Please enter a name', trigger: 'blur' }
+				]
+			},
+			// Added editing interface data
+			dataForm: {
+<%
+	for(column in table.columns) {
+%>
+				${column.fieldName}: null,
+<%
+	}
+%>
+			}
+		}
+	},
+	methods: {
+		// Get paginated data
+		findPage: function (data) {
+			if(data !== null) {
+				this.pageRequest = data.pageRequest
+			}
+			this.pageRequest.columnFilters = {label: {name:'label', value:this.filters.label}}
+			this.$api.${table.objectName}.findPage(this.pageRequest).then((res) => {
+				this.pageResult = res.data
+			}).then(data!=null?data.callback:'')
+		},
+		// batch deletion
+		handleDelete: function (data) {
+			this.$api.${table.objectName}.batchDelete(data.params).then(data!=null?data.callback:'')
+		},
+		// Show new interface
+		handleAdd: function () {
+			this.editDialogVisible = true
+			this.operation = true
+			this.dataForm = {
+<%
+	for(column in table.columns) {
+%>
+				${column.fieldName}: null,
+<%
+	}
+%>
+			}
+		},
+		// Show editing interface
+		handleEdit: function (params) {
+			this.editDialogVisible = true
+			this.operation = false
+			this.dataForm = Object.assign({}, params.row)
+		},
+		// edit
+		submitForm: function () {
+			this.$refs.dataForm.validate((valid) => {
+				if (valid) {
+					this.$confirm('Are you sure to submit?', 'warnning', {}).then(() => {
+						this.editLoading = true
+						let params = Object.assign({}, this.dataForm)
+						this.$api.${table.objectName}.save(params).then((res) => {
+							if(res.code == 200) {
+								this.$message({ message: 'success', type: 'success' })
+							} else {
+								this.$message({message: 'fail, ' + res.msg, type: 'error'})
+							}
+							this.editLoading = false
+							this.$refs['dataForm'].resetFields()
+							this.editDialogVisible = false
+							this.findPage(null)
+						})
+					})
+				}
+			})
+		},
+		// time formatting
+      	dateFormat: function (row, column, cellValue, index){
+          	return format(row[column.property])
+      	}
+	},
+	mounted() {
+	}
+}
+</script>
+
+<style scoped>
+
+</style>

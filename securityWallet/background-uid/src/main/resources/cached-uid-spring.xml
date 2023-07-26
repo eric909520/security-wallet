@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+	<!-- UID generator -->
+	<bean id="disposableWorkerIdAssigner" class="org.secwallet.uid.worker.DisposableWorkerIdAssigner" />
+
+	<bean id="cachedUidGenerator" class="org.secwallet.uid.impl.CachedUidGenerator">
+		<property name="workerIdAssigner" ref="disposableWorkerIdAssigner" />
+
+
+	</bean>
+
+</beans>

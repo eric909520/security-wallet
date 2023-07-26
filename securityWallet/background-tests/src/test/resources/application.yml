@@ -1,0 +1,47 @@
+logging:
+  level:
+    org.springframework: info
+    com.cthl.bpm: debug
+
+mybatis:
+  config-location: classpath:/mybatis-config.xml
+  mapper-locations: classpath*:/mybatis/*Mapper.xml
+
+spring:
+  redis:
+    host: 124.70.192.185
+    port: 6379
+  datasource:
+    platform: h2
+    master:
+      url: jdbc:h2:mem:master;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE
+      driverClassName: org.h2.Driver
+      username: sa
+      password:
+    schema: classpath:sql/init.sql
+    data: classpath:sql/data.sql
+#    cluster:
+#      - key: merchant
+#        url: jdbc:h2:mem:master;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE
+#        driverClassName: org.h2.Driver
+#        username: root
+#        password: root
+#      - key: slave
+#        url: jdbc:h2:mem:master;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE
+#        driverClassName: org.h2.Driver
+#        username: root
+#        password: root
+cthl.upload:
+  batch:
+    count: 20
+  upload:
+    filebrowse:
+    upLoadType: fileUploadStrategy
+    http:
+      filepath: ./uploads
+    ftp:
+      filepath: ./uploads-ftp
+
+
+sentry:
+  dsn:

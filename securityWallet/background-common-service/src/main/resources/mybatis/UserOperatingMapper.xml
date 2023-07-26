@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.secwallet.commonservice.dao.UserOperatingMapper">
+
+	<!--<resultMap id="DtoResultMap" type="UserFundFlowDto">-->
+		<!--<result column="fund_type" property="fundType"/>-->
+		<!--<result column="option_amount" property="amount"/>-->
+		<!--<result column="flow_no" property="flowNo"/>-->
+		<!--<result column="source_no" property="sourceNo"/>-->
+		<!--<result column="create_time" property="createTime"/>-->
+	<!--</resultMap>-->
+
+	<insert id="addUserOperating">
+		insert into user_operation_log (user_id,type,operate_desc,ip,os,address,operate_time)VALUES(#{userId},#{type},#{desc},#{ip},#{os},#{address},#{time});
+	</insert>
+	<select id="findUserOperating" resultType="org.secwallet.commonmodel.entity.UserOperating">
+		SELECT
+		operate_desc `desc`,
+		ip,
+		os,
+		operate_time time
+		from user_operation_log
+		where  user_id = #{userId}
+		<if test="100 > type">
+			and type = #{type}
+		</if>
+		order by id desc
+		limit #{pageNum},#{pageSize};
+	</select>
+
+	<select id="findUserOperatingTotalCount" resultType="int">
+		SELECT
+		count(id)
+		from user_operation_log
+		where  user_id = #{userId}
+		<if test="100 > type">
+			and type = #{type}
+		</if>;
+	</select>
+</mapper>

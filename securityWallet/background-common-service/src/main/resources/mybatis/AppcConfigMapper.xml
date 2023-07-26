@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.secwallet.commonservice.dao.AppConfigMapper">
+
+	<!--<resultMap id="DtoResultMap" type="UserFundFlowDto">-->
+		<!--<result column="fund_type" property="fundType"/>-->
+		<!--<result column="option_amount" property="amount"/>-->
+		<!--<result column="flow_no" property="flowNo"/>-->
+		<!--<result column="source_no" property="sourceNo"/>-->
+		<!--<result column="create_time" property="createTime"/>-->
+	<!--</resultMap>-->
+
+	<select id="findSysKey" resultType="org.secwallet.commonmodel.entity.AppConfig">
+	SELECT c_key `key`,c_value `value` from app_config WHERE c_key =#{key}
+	</select>
+    <select id="findWithdrawKey" resultType="org.secwallet.commonmodel.entity.AppConfig">
+		SELECT c_key `key`,c_value `value` from app_config WHERE type = #{type}
+	</select>
+
+	<select id="findFixedConfigList" resultType="org.secwallet.commonmodel.entity.AppConfig">
+		SELECT c_key `key`,c_value `value` from app_config WHERE type in (4, 9)
+	</select>
+
+</mapper>
